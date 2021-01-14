@@ -78,7 +78,7 @@
               <input type="password" class="form-control" id="passwordreg" placeholder="bevestig wachtwoord">
             </div>
             <input type="checkbox" id="regconfirm">
-            <label for="regconfirm">Ik ga akkoord met de voorwaarden</label><br><br>
+            <label for="regconfirm">Ik ga akkoord met de voorwaarden</label><br>
             <button type="button" class="btn btn-info btn-block btn-round">Registreer</button>
           </form>
             </div>
@@ -100,13 +100,45 @@
               Voer u email in en we sturen u een mail met een code om u wachtwoord te resetten
               <input type="email" class="form-control" id="email"placeholder="email">
             </div>
-            Het kan een aantal minuten duren voordat u deze code ontvangen heeft.
-            Bekijk uw spam folder als u niets in uw inbox ziet.<br><br>
             <button type="button" class="btn btn-info btn-block btn-round">Stuur herstel code</button>
             </div>
           </div>
         </div>
       </div>
+
+
+      <!--leeg blogpost WIP-->
+
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    nieuwe post
+  </button>
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Maak nieuwe post</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">schrijf tekst</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+          </div>
+          
+          <div class="mb-3">
+            <label for="formFile" class="form-label">selecteer een foto</label>
+            <input class="form-control" type="file" id="formFile">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Delete post</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
       
 </body>
 </html>
