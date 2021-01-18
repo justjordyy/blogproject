@@ -90,13 +90,14 @@ $dbpassword = "root"; // db password
 
 $db = new PDO('msql:host=$severname;dbname=$datab', '$dbusername', '$dbpassword');
 
-
-
+$username = htmlspecialchars($_POST['gebruikersnaam']);
+$email = htmlspecialchars($_POST['email']);
+$wachtwoord = htmlspecialchars($_POST['wachtwoord']);
 $query = $db->prepare("INSERT INTO gebruikers(gebruikersnaam, email, wachtwoord) VALUES (:gebruikersnaam, :email, :wachtwoord)");
 
-$query->bindValue(":gebruikersnaam", "username", PDO::PARAM_STR);
-$query->bindValue(":email", "email", PDO::PARAM_STR);
-$query->bindValue(":wachtwoord", "wachtwoord", PDO::PARAM_STR);
+$query->bindValue(":gebruikersnaam", "$username", PDO::PARAM_STR);
+$query->bindValue(":email", "$email", PDO::PARAM_STR);
+$query->bindValue(":wachtwoord", "$wachtwoord", PDO::PARAM_STR);
 
 if($query->execute() == TRUE)
 {
