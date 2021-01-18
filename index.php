@@ -64,28 +64,53 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-             <form id="mdl">
+             <form id="mdl"  method="post">
               <div class="form-group">
-                <input type="text" class="form-control" id="emailreg"placeholder="gebruikersnaam">
+                <input type="text" class="form-control" id="usernamereg"placeholder="gebruikersnaam" name="gebruikersnaam">
               </div>
             <div class="form-group">
-              <input type="email" class="form-control" id="emailreg"placeholder="Email adres">
+              <input type="email" class="form-control" id="emailreg"placeholder="Email adres" name="email">
             </div>
             <div class="form-group">
-              <input type="password" class="form-control" id="passwordreg" placeholder="wachtwoord">
-            </div>
-            <div class="form-group">
-              <input type="password" class="form-control" id="passwordreg" placeholder="bevestig wachtwoord">
+              <input type="password" class="form-control" id="passwordreg" placeholder="wachtwoord" name="wachtwoord">
             </div>
             <input type="checkbox" id="regconfirm">
-            <label for="regconfirm">Ik ga akkoord met de voorwaarden</label><br>
-            <button type="button" class="btn btn-info btn-block btn-round">Registreer</button>
+            <label for="regconfirm">Ik ga akkoord met de voorwaarden</label><br><br>
+            <button type="submit" class="btn btn-info btn-block btn-round">Registreer</button>
           </form>
             </div>
           </div>
         </div>
       </div>
+<?php 
+$severname = "localhost"; //servername
+$datab = ""; //database name
+$dbusername = ""; // db username
+$dbpassword = ""; // db password
 
+$db = new PDO('msql:host=$severname;dbname=$datab', '$dbusername', '$dbpassword');
+
+
+
+$query = $db->prepare("INSERT INTO gebruikers(gebruikersnaam, email, wachtwoord) VALUES (:gebruikersnaam, :email, :wachtwoord)");
+
+$query->bindValue(":gebruikersnaam", "username", PDO::PARAM_STR);
+$query->bindValue(":email", "email", PDO::PARAM_STR);
+$query->bindValue(":wachtwoord", "wachtwoord", PDO::PARAM_STR);
+
+if($query->execute() == TRUE)
+{
+       echo "Het is goed gegaan";
+
+}
+else
+{
+    echo "Er gaat iets mis";
+}
+
+
+?>
+?>
       <!-- wachtwoord vergeten -->
       <div class="modal fade" id="wwvergeten" tabindex="-1" aria-labelledby="wwvergeten" aria-hidden="true">
         <div class="modal-dialog">
