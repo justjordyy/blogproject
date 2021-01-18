@@ -85,8 +85,8 @@
 <?php 
 $severname = "localhost"; //servername
 $datab = ""; //database name
-$dbusername = ""; // db username
-$dbpassword = ""; // db password
+$dbusername = "root"; // db username
+$dbpassword = "root"; // db password
 
 $db = new PDO('msql:host=$severname;dbname=$datab', '$dbusername', '$dbpassword');
 
