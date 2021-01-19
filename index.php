@@ -91,7 +91,7 @@ $dbpassword = "root"; // db password
 $db = new PDO('msql:host=$severname;dbname=$datab', '$dbusername', '$dbpassword');
 
 $username = htmlspecialchars($_POST['gebruikersnaam']);
-$email = htmlspecialchars($_POST['email']);
+$email = htmlspecialchars($_POST['emailadres']);
 $wachtwoord = htmlspecialchars($_POST['wachtwoord']);
 $query = $db->prepare("INSERT INTO gebruikers(gebruikersnaam, email, wachtwoord) VALUES (:gebruikersnaam, :email, :wachtwoord)");
 
