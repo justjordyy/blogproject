@@ -66,13 +66,13 @@
             <div class="modal-body">
              <form id="mdl"  method="post">
               <div class="form-group">
-                <input type="text" class="form-control" id="usernamereg"placeholder="gebruikersnaam" name="gebruikersnaam">
+                <input type="text" class="form-control" id="usernamereg"placeholder="gebruikersnaam" required name="gebruikersnaam">
               </div>
             <div class="form-group">
-              <input type="email" class="form-control" id="emailreg"placeholder="Email adres" name="email">
+              <input type="email" class="form-control" id="emailreg"placeholder="Email adres" required name="email">
             </div>
             <div class="form-group">
-              <input type="password" class="form-control" id="passwordreg" placeholder="wachtwoord" name="wachtwoord">
+              <input type="password" class="form-control" id="passwordreg" placeholder="wachtwoord" required name="wachtwoord">
             </div>
             <input type="checkbox" id="regconfirm">
             <label for="regconfirm">Ik ga akkoord met de voorwaarden</label><br><br>
@@ -83,35 +83,39 @@
         </div>
       </div>
 <?php 
-$severname = "localhost"; //servername
-$datab = ""; //database name
-$dbusername = "root"; // db username
-$dbpassword = "root"; // db password
-
-$db = new PDO('msql:host=$severname;dbname=$datab', '$dbusername', '$dbpassword');
-
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "testdatabase";
+//connection
+try {
+  $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+//Error
+  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+  echo $e->getMessage();
+  echo "Kon geen verbinding maken.";
+}
+if($_SERVER["REQUEST_METHOD"] == "POST"){
 $username = htmlspecialchars($_POST['gebruikersnaam']);
-$email = htmlspecialchars($_POST['emailadres']);
+$email = htmlspecialchars($_POST['email']);
 $wachtwoord = htmlspecialchars($_POST['wachtwoord']);
-$query = $db->prepare("INSERT INTO gebruikers(gebruikersnaam, email, wachtwoord) VALUES (:gebruikersnaam, :email, :wachtwoord)");
+$wachtwoord2= $wachtwoord;
+$wachtwoordhash = password_hash($wachtwoord, PASSWORD_DEFAULT);
+$query = $conn->prepare("INSERT INTO information(gebruikersnaam, mail, WW) VALUES (:gebruikersnaam, :mail, :WW)");
+$query->bindValue(":gebruikersnaam", $username, PDO::PARAM_STR);
+$query->bindValue(":mail", $email, PDO::PARAM_STR);
+$query->bindValue(":WW", $wachtwoordhash, PDO::PARAM_STR);
 
-$query->bindValue(":gebruikersnaam", "$username", PDO::PARAM_STR);
-$query->bindValue(":email", "$email", PDO::PARAM_STR);
-$query->bindValue(":wachtwoord", "$wachtwoord", PDO::PARAM_STR);
-
-if($query->execute() == TRUE)
+if(!$query->execute() == TRUE)
 {
-       echo "Het is goed gegaan";
-
-}
-else
-{
-    echo "Er gaat iets mis";
+  $message = "something went wrong";
+  echo "<script type='text/javascript'>alert('$message');</script>";
 }
 
+}
+?>
 
-?>
-?>
       <!-- wachtwoord vergeten -->
       <div class="modal fade" id="wwvergeten" tabindex="-1" aria-labelledby="wwvergeten" aria-hidden="true">
         <div class="modal-dialog">
