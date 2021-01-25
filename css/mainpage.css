@@ -222,3 +222,21 @@
     text-align: center;
   }
   
+  #gebrerr{
+    display: none;
+    color: red;
+  }
+
+  #mailerr{
+    display: none;
+    color: red;
+  }
+
+  #wwerr{
+    display: none;
+    color: red;
+  }
+  #dberr{
+    display: none;
+    color: red;
+  }

@@ -79,6 +79,10 @@
             </div>
             <input type="checkbox" id="regconfirm">
             <label for="regconfirm">Ik ga akkoord met de voorwaarden</label><br><br>
+              <p id="gebrerr">gebruikersnaam is al in gebruik</p>
+              <p id="mailerr">er is al een account met deze mail</p>
+              <p id="wwerr">wachtwoorden komen niet overeen</p>
+              <p id="dberr">Kon geen verbinding maken met de database</p>
             <button type="submit" class="btn btn-info btn-block btn-round">Registreer</button>
           </form>
             </div>
