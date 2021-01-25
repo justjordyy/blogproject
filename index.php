@@ -74,6 +74,9 @@
             <div class="form-group">
               <input type="password" class="form-control" id="passwordreg" placeholder="wachtwoord" required name="wachtwoord">
             </div>
+            <div class="form-group">
+              <input type="password" class="form-control" id="passwordreg" placeholder="Voer uw wachtwoord nogmaals in" required name="wachtwoord2">
+            </div>
             <input type="checkbox" id="regconfirm">
             <label for="regconfirm">Ik ga akkoord met de voorwaarden</label><br><br>
             <button type="submit" class="btn btn-info btn-block btn-round">Registreer</button>
@@ -97,12 +100,15 @@ try {
   echo "Kon geen verbinding maken.";
 }
 if($_SERVER["REQUEST_METHOD"] == "POST"){
+  //verklaar alle vars
 $username = htmlspecialchars($_POST['gebruikersnaam']);
 $email = htmlspecialchars($_POST['email']);
 $wachtwoord = htmlspecialchars($_POST['wachtwoord']);
-$wachtwoord2= $wachtwoord;
+$wachtwoord2 = htmlspecialchars($_POST['wachtwoord2']);
 $wachtwoordhash = password_hash($wachtwoord, PASSWORD_DEFAULT);
+//prepare 
 $query = $conn->prepare("INSERT INTO information(gebruikersnaam, mail, WW) VALUES (:gebruikersnaam, :mail, :WW)");
+//Check dubbele mail
 $sql = "SELECT * FROM information WHERE mail = ?";
 $stmt = $conn->prepare($sql);
 $stmt->execute(array($email));
@@ -111,6 +117,7 @@ if($result){
   echo "Dubbele email";
 }
 else{
+  // check dubbele gebruikersnaam
   $sql = "SELECT * FROM information WHERE gebruikersnaam = ?";
 $stmt = $conn->prepare($sql);
 $stmt->execute(array($username));
@@ -118,8 +125,13 @@ $result = $stmt->fetch(PDO::FETCH_ASSOC);
 if($result){
   echo "Dubbele gebruikersnaam";
 }
-
+else{ 
+  //wachtwoordcheck
+  if($wachtwoord !== $wachtwoord2){
+  echo "voer hetzelfde wachtwoord in";
+}
 else{
+
 $query->bindValue(":gebruikersnaam", $username, PDO::PARAM_STR);
 $query->bindValue(":mail", $email, PDO::PARAM_STR);
 $query->bindValue(":WW", $wachtwoordhash, PDO::PARAM_STR);
@@ -129,7 +141,7 @@ if(!$query->execute() == TRUE)
   $message = "something went wrong";
   echo "<script type='text/javascript'>alert('$message');</script>";
 }
-
+}
 }
 }
 }
