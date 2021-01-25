@@ -103,6 +103,23 @@ $wachtwoord = htmlspecialchars($_POST['wachtwoord']);
 $wachtwoord2= $wachtwoord;
 $wachtwoordhash = password_hash($wachtwoord, PASSWORD_DEFAULT);
 $query = $conn->prepare("INSERT INTO information(gebruikersnaam, mail, WW) VALUES (:gebruikersnaam, :mail, :WW)");
+$sql = "SELECT * FROM information WHERE mail = ?";
+$stmt = $conn->prepare($sql);
+$stmt->execute(array($email));
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+if($result){
+  echo "Dubbele email";
+}
+else{
+  $sql = "SELECT * FROM information WHERE gebruikersnaam = ?";
+$stmt = $conn->prepare($sql);
+$stmt->execute(array($username));
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+if($result){
+  echo "Dubbele gebruikersnaam";
+}
+
+else{
 $query->bindValue(":gebruikersnaam", $username, PDO::PARAM_STR);
 $query->bindValue(":mail", $email, PDO::PARAM_STR);
 $query->bindValue(":WW", $wachtwoordhash, PDO::PARAM_STR);
@@ -113,6 +130,8 @@ if(!$query->execute() == TRUE)
   echo "<script type='text/javascript'>alert('$message');</script>";
 }
 
+}
+}
 }
 ?>
 
