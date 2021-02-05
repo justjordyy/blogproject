@@ -2,10 +2,15 @@
 session_start();
 
 
+//dit stukje laat GEEN error messages meer zien, PAS OP.
+//error_reporting(0);
 
-$conn = new PDO('mysql:host=localhost;dbname=test', 'hoofdadmin', 'hoofdadmin123');
+//$conn = new PDO('mysql:host=localhost;dbname=test', 'hoofdadmin', 'hoofdadmin123');
 
 
+if(isset($_SESSION['loginid'])){
+  header('Location: logged-in.php');
+}
 
 
 if(isset($_POST["loginbutton"])){
@@ -13,7 +18,9 @@ if(isset($_POST["loginbutton"])){
   
     if(empty($_POST['loginmail']) || empty($_POST['loginwachtwoord'])){
 
-      echo"vul uw email adress en/of wachtwoord in.";
+      $list2="<center> Voer uw email en/of wachtwoord in.<center>"; 
+
+      $list2 .=  "</a><br/>";
     }
     else{
 
@@ -24,7 +31,7 @@ if(isset($_POST["loginbutton"])){
       $query = $conn->prepare("SELECT * FROM userdata WHERE email=:email AND wachtwoord=:wachtwoord");
 
       $query->bindValue(":email", $loginmail, PDO::PARAM_STR);
-      $query->bindValue(":wachtwoord", $loginwachtwoord, PDO::PARAM_STR);
+      $query->bindValue(":wachtwoord", $loginwachtwoordhash, PDO::PARAM_STR);
 
 
       if($query->execute() == TRUE){
@@ -39,21 +46,24 @@ if(isset($_POST["loginbutton"])){
 
         }
         else{
-          echo('Onjuiste email en/of wachtwoord, probeer het opnieuw.');
+          $list="<center> Onjuiste email en/of wachtwoord, probeer het opnieuw.<center>"; 
+
+          $list .=  "</a><br/>";
+          
+          
         }
 
 
       }
       else{
-        echo"Er ging iets mis, probeer het opnieuw.";
+        echo"Error: er ging iets mis, probeer het opnieuw";
       }
 
     }
 
     
-
+    
   
-
 }
 
 
@@ -85,7 +95,7 @@ if(isset($_POST["loginbutton"])){
             <form class="d-flex">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
-              </form>
+            </form>
             <span class="navbar-text" id="login"  data-bs-toggle="modal" data-bs-target="#loginmodal">Login</span>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -111,6 +121,10 @@ if(isset($_POST["loginbutton"])){
             </div>
             <input id="button" type="submit" class="btn btn-info btn-block btn-round" name="loginbutton" id="loginbutton" placeholder="login"></input>
               </form>
+            </div>
+            <div class="errorcode">
+              <?php echo($list); ?>
+              <?php echo($list2); ?>
             </div>
             <span  id="forgotpw"  data-bs-toggle="modal" data-bs-target="#wwvergeten">wachtwoord vergeten?</span>
             <div class="modal-footer">
