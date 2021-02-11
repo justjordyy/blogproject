@@ -27,10 +27,39 @@
       </nav>
 
       <div class="post-container">
-        <button class="post-btn btn-outline-success" type="submit">Create Post</button>
+        <button class="post-btn btn-outline-success" type="submit" data-bs-toggle="modal" data-bs-target="#modal" >Create Post</button>
       </div>
       <div class="check">
       </div>
 
+      <div class="modal fade" id="modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Maak een blogpost</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="post">
+      <div class="modal-body">
+      <div class="mb-3">
+  <label for="exampleFormControlTextarea1" class="form-label">Titel</label>
+  <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"></textarea>
+  <label for="exampleFormControlTextarea1" class="form-label">beschrijving</label>
+  <textarea class="form-control" id="exampleFormControlTextarea1" rows="8"></textarea>
+  <label for="exampleFormControlTextarea1" class="form-label">keywords</label>
+  <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"></textarea>
+  <div class="input-group">
+  <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+</div>
+</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
 </body>
 </html>
