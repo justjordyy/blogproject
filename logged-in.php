@@ -25,7 +25,7 @@
 
 
   if(!isset($_SESSION['loginid'])){
-    //LET OP hij redirect nog naar de copy pagina. 
+    //LET OP hij redirect nog naar de copy pagina.
     header('Location: index copy.php');
   }
 
@@ -40,23 +40,23 @@
 
 
         if($row != NULL){
-          
+
           $username = $row['gebruikersnaam'];
-          
+
 
         }
-        
+
 
 
       }
-    
 
 
 
 
 
 
-  
+
+
 ?>
 
     <div class="loader">loading....</div> <!-- Website loader -->
@@ -71,14 +71,14 @@
             <button class="btn btn-outline-success" type="submit">Search</button>
           </form>
           <span class="navbar-brand"><img src="./img/brand.png"width="40" height="40" class="prof-pic"></span>
-          
+
         </div>
 
         <?php echo "<a href=\"profielPagina.php\"><font color=\"#fffff\" size=\"5\"> $username </font></a>"; ?>
       </nav>
 
       <div class="post-container">
-        <button class="post-btn btn-outline-success" type="submit">Create Post</button>
+        <button class="post-btn btn-outline-success" type="submit" data-bs-toggle="modal" data-bs-target="#modal" >Create Post</button>
       </div>
       <div class="check">
       </div>

@@ -1,3 +1,68 @@
+<?php
+session_start();
+
+
+
+$conn = new PDO('mysql:host=localhost;dbname=test', 'root', '');
+
+
+
+
+if(isset($_POST["loginbutton"])){
+
+  
+    if(empty($_POST['loginmail']) || empty($_POST['loginwachtwoord'])){
+
+      echo"vul uw email adress en/of wachtwoord in.";
+    }
+    else{
+
+      $loginmail = htmlspecialchars($_POST['loginmail']);
+      $loginwachtwoord = htmlspecialchars($_POST['loginwachtwoord']);
+      $loginwachtwoordhash = hash('sha256', $loginwachtwoord);
+
+      $query = $conn->prepare("SELECT * FROM userdata WHERE email=:email AND wachtwoord=:wachtwoord");
+
+      $query->bindValue(":email", $loginmail, PDO::PARAM_STR);
+      $query->bindValue(":wachtwoord", $loginwachtwoord, PDO::PARAM_STR);
+
+
+      if($query->execute() == TRUE){
+
+        $row = $query->fetch();
+
+
+        if($row != NULL){
+          
+          $_SESSION["loginid"] = $row['id'];
+          header('Location: logged-in.php');
+
+        }
+        else{
+          echo('Onjuiste email en/of wachtwoord, probeer het opnieuw.');
+        }
+
+
+      }
+      else{
+        echo"Er ging iets mis, probeer het opnieuw.";
+      }
+
+    }
+
+    
+
+  
+
+}
+
+
+
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,119 +102,23 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-             <form id="mdl">
+             <form method="post" id="mdl">
             <div class="form-group">
-              <input type="email" class="form-control" id="email"placeholder="email adres">
+              <input type="email" class="form-control" id="email"placeholder="email adres" name="loginmail">
             </div>
             <div class="form-group">
-              <input type="password" class="form-control" id="password" placeholder="wachtwoord">
+              <input type="password" class="form-control" id="password" placeholder="wachtwoord" name="loginwachtwoord">
             </div>
-            <button type="button" class="btn btn-info btn-block btn-round">Login</button>
-          </form>
+            <input id="button" type="submit" class="btn btn-info btn-block btn-round" name="loginbutton" id="loginbutton" placeholder="login"></input>
+              </form>
             </div>
             <span  id="forgotpw"  data-bs-toggle="modal" data-bs-target="#wwvergeten">wachtwoord vergeten?</span>
             <div class="modal-footer">
-              <span  id="ngl"  data-bs-toggle="modal" data-bs-target="#registreermodal">Nog geen account? Registreer</span>
+              <span  id="ngl"  data-bs-toggle="modal" data-bs-target="#registreermodal">Nog geen account? <a href="./registreren.php">Registreren</a></span>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Registreer -->
-      <div class="modal fade" id="registreermodal" tabindex="-1" aria-labelledby="registreer" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="registreer">Registreren</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-             <form id="mdl"  method="post">
-              <div class="form-group">
-                <input type="text" class="form-control" id="usernamereg"placeholder="gebruikersnaam" required name="gebruikersnaam">
-              </div>
-            <div class="form-group">
-              <input type="email" class="form-control" id="emailreg"placeholder="Email adres" required name="email">
-            </div>
-            <div class="form-group">
-              <input type="password" class="form-control" id="passwordreg" placeholder="wachtwoord" required name="wachtwoord">
-            </div>
-            <div class="form-group">
-              <input type="password" class="form-control" id="passwordreg" placeholder="Voer uw wachtwoord nogmaals in" required name="wachtwoord2">
-            </div>
-            <input type="checkbox" id="regconfirm">
-            <label for="regconfirm">Ik ga akkoord met de voorwaarden</label><br><br>
-              <p id="gebrerr">gebruikersnaam is al in gebruik</p>
-              <p id="mailerr">er is al een account met deze mail</p>
-              <p id="wwerr">wachtwoorden komen niet overeen</p>
-              <p id="dberr">Kon geen verbinding maken met de database</p>
-            <button type="submit" class="btn btn-info btn-block btn-round">Registreer</button>
-          </form>
-            </div>
-          </div>
-        </div>
-      </div>
-<?php 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "testdatabase";
-//connection
-try {
-  $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-//Error
-  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-  echo $e->getMessage();
-  echo "Kon geen verbinding maken.";
-}
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-  //verklaar alle vars
-$username = htmlspecialchars($_POST['gebruikersnaam']);
-$email = htmlspecialchars($_POST['email']);
-$wachtwoord = htmlspecialchars($_POST['wachtwoord']);
-$wachtwoord2 = htmlspecialchars($_POST['wachtwoord2']);
-$wachtwoordhash = password_hash($wachtwoord, PASSWORD_DEFAULT);
-//prepare 
-$query = $conn->prepare("INSERT INTO information(gebruikersnaam, mail, WW) VALUES (:gebruikersnaam, :mail, :WW)");
-//Check dubbele mail
-$sql = "SELECT * FROM information WHERE mail = ?";
-$stmt = $conn->prepare($sql);
-$stmt->execute(array($email));
-$result = $stmt->fetch(PDO::FETCH_ASSOC);
-if($result){
-  echo "Dubbele email";
-}
-else{
-  // check dubbele gebruikersnaam
-  $sql = "SELECT * FROM information WHERE gebruikersnaam = ?";
-$stmt = $conn->prepare($sql);
-$stmt->execute(array($username));
-$result = $stmt->fetch(PDO::FETCH_ASSOC);
-if($result){
-  echo "Dubbele gebruikersnaam";
-}
-else{ 
-  //wachtwoordcheck
-  if($wachtwoord !== $wachtwoord2){
-  echo "voer hetzelfde wachtwoord in";
-}
-else{
-
-$query->bindValue(":gebruikersnaam", $username, PDO::PARAM_STR);
-$query->bindValue(":mail", $email, PDO::PARAM_STR);
-$query->bindValue(":WW", $wachtwoordhash, PDO::PARAM_STR);
-
-if(!$query->execute() == TRUE)
-{
-  $message = "something went wrong";
-  echo "<script type='text/javascript'>alert('$message');</script>";
-}
-}
-}
-}
-}
-?>
 
       <!-- wachtwoord vergeten -->
       <div class="modal fade" id="wwvergeten" tabindex="-1" aria-labelledby="wwvergeten" aria-hidden="true">
@@ -174,3 +143,6 @@ if(!$query->execute() == TRUE)
       
 </body>
 </html>
+
+
+
