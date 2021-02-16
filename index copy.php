@@ -3,9 +3,9 @@ session_start();
 
 
 //dit stukje laat GEEN error messages meer zien, PAS OP.
-//error_reporting(0);
+error_reporting(0);
 
-//$conn = new PDO('mysql:host=localhost;dbname=test', 'hoofdadmin', 'hoofdadmin123');
+$conn = new PDO('mysql:host=localhost;dbname=test', 'hoofdadmin', 'hoofdadmin123');
 
 
 if(isset($_SESSION['loginid'])){
@@ -41,7 +41,7 @@ if(isset($_POST["loginbutton"])){
 
         if($row != NULL){
           
-          $_SESSION["loginid"] = $row['id'];
+          $_SESSION["loginid"] = $row['gebruikersnaam'];
           header('Location: logged-in.php');
 
         }

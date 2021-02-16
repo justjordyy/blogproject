@@ -1,3 +1,192 @@
+
+<?php
+  session_start();
+
+  $conn = new PDO('mysql:host=localhost;dbname=test', 'hoofdadmin', 'hoofdadmin123');
+
+  $username = $_SESSION['loginid'];
+  
+  //dit stukje laat GEEN error messages meer zien, PAS OP.
+  error_reporting(0);
+
+
+  $query = $conn->prepare("SELECT * FROM userdata WHERE gebruikersnaam='$username'");
+
+
+
+      if($query->execute() == TRUE){
+
+        $row = $query->fetch();
+
+
+        if($row != NULL){
+          
+          $username = $row['gebruikersnaam'];
+          $usermail = $row['email'];
+          
+          if ($row['role'] == 1){
+
+            $userrole = "Admin";
+          }
+          else{
+            $userrole = "Editor";
+          }
+
+        }
+        else{
+          
+          echo"Error: er ging iets mis, probeer het opnieuw 1";
+          
+        }
+
+
+      }
+      else{
+        echo"Error: er ging iets mis, probeer het opnieuw 2";
+      }
+
+
+
+
+  if(!isset($_SESSION['loginid'])){
+    //LET OP hij redirect nog naar de copy pagina. 
+    header('Location: index copy.php');
+  }
+
+
+
+
+    
+    
+    
+    
+
+
+
+    
+
+
+
+
+
+?>
+
+<?php
+
+  $conn = new PDO('mysql:host=localhost;dbname=test', 'hoofdadmin', 'hoofdadmin123');
+
+  $username = $_SESSION['loginid'];
+
+
+  $query = $conn->prepare("SELECT * FROM userdata WHERE gebruikersnaam='$username'");
+
+
+
+      if($query->execute() == TRUE){
+
+        $row = $query->fetch();
+
+
+        if($row != NULL){
+          
+          $username2 = $row['gebruikersnaam'];
+          $usermail2 = $row['email'];
+          $userpassword2 = $row['wachtwoord'];
+          
+
+        }
+
+
+      }
+
+
+
+    $gebruikersnaam = htmlspecialchars($_POST['Gebruikersnaam']);
+    $loginmail = htmlspecialchars($_POST['loginmail']);
+    $loginwachtwoord = htmlspecialchars($_POST['Wachtwoord']);
+    $loginwachtwoordbevestig = htmlspecialchars($_POST['Bevestigwachtwoord']);
+    $loginwachtwoordhash = hash('sha256', $loginwachtwoord);
+
+
+  
+  if(isset($_POST["updatebutton"]) && $gebruikersnaam != NULL && $gebruikersnaam != NULL && $loginwachtwoord != NULL && $loginwachtwoordhash != NULL){
+
+
+
+
+    if($gebruikersnaam == NULL){
+
+      $username1 = $username2;
+
+
+
+    }
+    else{
+
+      $username1 = $gebruikersnaam;
+    }
+
+
+    if($loginmail == NULL){
+
+      $usermail1 = $usermail2;
+
+      
+
+    }
+    else{
+
+      $usermail1 = $loginmail;
+
+    }
+
+    if($loginwachtwoord == NULL || $loginwachtwoord != $loginwachtwoordbevestig){
+
+      $userpassword1 = $userpassword2;
+
+      
+
+    }
+    else{
+
+      $userpassword1 = $loginwachtwoordhash;
+
+    }
+
+
+    $query = $conn->prepare("UPDATE userdata SET gebruikersnaam=:gebruikersnaam, email=:email, wachtwoord=:wachtwoord WHERE gebruikersnaam='$username'");
+
+    $query->bindValue(":gebruikersnaam", $username1, PDO::PARAM_STR);
+    $query->bindValue(":email", $usermail1, PDO::PARAM_STR);
+    $query->bindValue(":wachtwoord", $userpassword1, PDO::PARAM_STR);
+    
+
+    if($query->execute() == TRUE){
+
+      echo("Gegevens bijgewerkt. <br>");
+
+      session_destroy();
+      
+
+
+      header('Location: index copy.php');
+
+
+
+    }
+    else{
+      echo"Error: er ging iets mis, probeer het opnieuw 2 <br>";
+    }
+
+
+
+  }   
+
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +204,7 @@
     <!-- Navigatie bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-          <a class="navbar-brand" id="brandcolor" href="#">
+          <a class="navbar-brand" id="brandcolor" href="logged-in.php">
             <img src="./img/brand.png"width="40" height="40" class="d-inline-block align-top">  
             Placeholder</a>
             <form class="d-flex">
@@ -45,41 +234,21 @@
       <div class="userinformation">
         <img src="./img/brand.png" alt="profiel foto">
         <br><br>
-        <p id="userName">(placeholder gebruikersnaam)</p>
-        <br>
+        <?php echo "<font color=\"#fffff\" size=\"4\"> $username </font>"; ?>
+        <br><br>
         <p>Email-adress:</p>
-        <p id="userMail">(placeholder email)</p>
+        <?php echo "<font color=\"#fffff\" size=\"2\"> $usermail </font>"; ?>
+        <br><br>
         <p>Role:</p>
-        <p id="role">(placeholder role)</p>
+        <?php echo "<font color=\"#fffff\" size=\"4\"> $userrole </font>"; ?>
       </div>
 
     </div>
 
     <br><br><br>
 
-
+    <form method="post" action="" type="submit" >
     <div class="container" id="EditProfilePage" style="display:none;">
-      <div class="row gutters">
-        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
-          <div class="card h-100">
-            <div class="card-body">
-              <div class="account-settings">
-                <div class="user-profile">
-                  <div class="user-avatar">
-                    <img src="./img/brand.png">
-                  </div>
-                  <br>
-                  <h5 id="userName" class="user-name">(placeholder naam)</h5>
-                  <h6 id="userMail" class="user-email">(placeholder email)</h6>
-                </div>
-                <!--<div class="about">
-                  <h5 class="mb-2 text-primary">over mij</h5>
-                  <p>(placeholder over mij)</p>
-                </div>-->
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
           <div class="card h-100">
             <div class="card-body">
@@ -90,25 +259,25 @@
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                   <div class="form-group">
                     <label for="fullName">Gebruikersnaam</label>
-                    <input type="text" class="form-control" id="ChangeUserName" placeholder="Type hier uw nieuwe gebruikersnaam">
+                    <input type="text" class="form-control" id="Gebruikersnaam" name="Gebruikersnaam" placeholder="Type hier uw nieuwe gebruikersnaam">
                   </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                   <div class="form-group">
                     <label for="eMail">Email</label>
-                    <input type="email" class="form-control" id="ChangeUserMail" placeholder="Type hier uw nieuwe email-adress">
+                    <input type="email" class="form-control" id="ChangeUserMail" name="loginmail" placeholder="Type hier uw nieuwe email-adress">
                   </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                   <div class="form-group">
-                    <label for="eMail">Wachtwoord</label>
-                    <input type="password" class="form-control" id="changePassword" placeholder="Type hier uw nieuwe wachtwoord">
+                    <label for="wachtwoord">Wachtwoord</label>
+                    <input type="password" class="form-control" id="changePassword" name="Wachtwoord" placeholder="Type hier uw nieuwe wachtwoord">
                   </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                   <div class="form-group">
-                    <label for="eMail">Wachtwoord bevestigen</label>
-                    <input type="password" class="form-control" id="changePasswordConfirm" placeholder="Type hier uw nieuwe wachtwoord opnieuw">
+                    <label for="wachtwoordbevestigen">Wachtwoord bevestigen</label>
+                    <input type="password" class="form-control" id="changePasswordConfirm" name="Bevestigwachtwoord" placeholder="Type hier uw nieuwe wachtwoord opnieuw">
                   </div>
                 </div>
                 <div class="mb-3">
@@ -116,13 +285,14 @@
                   <label for="formFile" class="form-label">Upload hier uw profiel foto</label>
                   <input class="form-control" type="file" id="formFile">
                 </div>                
+                <h5>Als u uw gegevens update moet u opnieuw inloggen!</h5>
               </div>
               <div class="row gutters">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                   <div class="text-right">
                     <br>
-                    <button type="button" id="CancelUpdate" name="submit" class="btn btn-secondary">Annuleren</button>
-                    <button type="button" id="SubmitUpdate" name="submit" class="btn btn-primary">Updaten</button>
+                    <button type="button" id="CancelUpdate" name="cancel" class="btn btn-secondary">Annuleren</button>
+                    <input type="submit" id="updatebutton" name="updatebutton" class="btn btn-primary" placeholdername="Updaten"></input>
                   </div>
                 </div>
               </div>
@@ -131,35 +301,7 @@
         </div>
       </div>
       </div>
-
-    <!--<div class="container">
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="userinformation">
-            Gebruikersnaam:
-            <p id="userName">(placeholder)</p>
-            Email-adress:
-            <p id="userMail">(placeholder)</p>
-            Role:
-            <p id="role">(placeholder)</p>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="userinformation">
-            <button class="ProfileButtons" id="changeUsername">
-              Verander Gebruikersnaam
-            </button>
-            <br><br><br>
-            <button class="ProfileButtons" id="changeEmail">
-              Verander Email-adress
-            </button>
-            <br><br><br>
-            <button class="ProfileButtons" id="changePassword">
-              Verander Wachtwoord
-            </button>
-          </div>
-        </div>
-    </div>-->
+      </form>
 
       
 
