@@ -83,7 +83,7 @@ if(isset($_POST["loginbutton"])){
             <img src="./img/brand.png"width="40" height="40" class="d-inline-block align-top">
             Placeholder</a>
             <form action="search.php?" method="post" class="d-flex">
-              <input class="form-control me-2" type="text" name="search" placeholder="Search..." required="" style="width:30%"></p>
+              <input class="form-control me-2" type="text" name="search" placeholder="Search..." required="" style="width:30%">
               <button class="btn btn-outline-success" type="submit" value="Submit">Search</button>
             </form>
             <span class="navbar-text" id="login"  data-bs-toggle="modal" data-bs-target="#loginmodal">Login</span>
@@ -103,15 +103,13 @@ if(isset($_POST["loginbutton"])){
           ));
 
       $search=$_POST['search'];
-      $query = $pdo->prepare("select * from information where gebruikersnaam LIKE '%$search%'  LIMIT 0 , 10");
+      $query = $pdo->prepare("select * from information where gebruikersnaam LIKE '%$search%'  LIMIT 0 , 99");
       $query->bindValue(1, "%$search%", PDO::PARAM_STR);
       $query->execute();
 
 
                if (!$query->rowCount() == 0) {
-      		 		echo "Search found :<br/>";
-      				echo "<table class='w3-table-all'>";
-                      echo "<tr class='w3-red'><td>gebruikersnaam</td></tr>";
+      				echo "<table class=''>";
                   while ($results = $query->fetch()) {
       				echo "<tr><td>";
                       echo $results['gebruikersnaam'];
@@ -119,7 +117,7 @@ if(isset($_POST["loginbutton"])){
                   }
       				echo "</table>";
               } else {
-                  echo 'No results found!';
+                  echo 'geen resultaten gevonden';
               }
       ?>
 
