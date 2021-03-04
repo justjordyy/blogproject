@@ -18,7 +18,7 @@ $username = htmlspecialchars($_POST['gebruikersnaam']);
 $email = htmlspecialchars($_POST['email']);
 $wachtwoord = htmlspecialchars($_POST['wachtwoord']);
 $wachtwoord2 = htmlspecialchars($_POST['wachtwoord2']);
-$wachtwoordhash = password_hash($wachtwoord, PASSWORD_DEFAULT);
+$wachtwoordhash = hash('sha256', $wachtwoord);
 //prepare 
 $query = $conn->prepare("INSERT INTO information(gebruikersnaam, mail, WW) VALUES (:gebruikersnaam, :mail, :WW)");
 //Check dubbele mail

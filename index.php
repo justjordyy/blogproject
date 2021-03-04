@@ -3,9 +3,13 @@ session_start();
 
 
 
-$conn = new PDO('mysql:host=localhost;dbname=test', 'root', '');
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "testdatabase";
 
 
+$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
 
 
 if(isset($_POST["loginbutton"])){
@@ -21,10 +25,12 @@ if(isset($_POST["loginbutton"])){
       $loginwachtwoord = htmlspecialchars($_POST['loginwachtwoord']);
       $loginwachtwoordhash = hash('sha256', $loginwachtwoord);
 
-      $query = $conn->prepare("SELECT * FROM userdata WHERE email=:email AND wachtwoord=:wachtwoord");
+      $query = $conn->prepare("SELECT * FROM information WHERE mail=:email AND WW=:wachtwoord");
 
       $query->bindValue(":email", $loginmail, PDO::PARAM_STR);
-      $query->bindValue(":wachtwoord", $loginwachtwoord, PDO::PARAM_STR);
+      $query->bindValue(":wachtwoord", $loginwachtwoordhash, PDO::PARAM_STR);
+
+
 
 
       if($query->execute() == TRUE){

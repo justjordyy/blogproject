@@ -17,20 +17,24 @@
 
 <?php
 
-  $conn = new PDO('mysql:host=localhost;dbname=test', 'hoofdadmin', 'hoofdadmin123');
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "testdatabase";
+  
 
-  $username = $_SESSION['loginid'];
+$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
 
 
+ $loginid = $_SESSION['loginid'];
 
 
   if(!isset($_SESSION['loginid'])){
-    //LET OP hij redirect nog naar de copy pagina.
-    header('Location: index copy.php');
+    header('Location: index.php');
   }
 
 
-  $query = $conn->prepare("SELECT * FROM userdata WHERE gebruikersnaam='$username'");
+  $query = $conn->prepare("SELECT gebruikersnaam FROM information WHERE id='$loginid'");
 
 
 
@@ -41,7 +45,7 @@
 
         if($row != NULL){
 
-          $username = $row['gebruikersnaam'];
+          $gebruikersnaam = $row['gebruikersnaam'];
 
 
         }
@@ -51,10 +55,77 @@
       }
 
 
+?>
+
+
+<?php
+  //blogsysteem
+
+  error_reporting(E_ALL);
+
+  $servername = "localhost";
+  $username = "root";
+  $password = "";
+  $dbname = "testdatabase";
+
+
+  $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+  
+  
+
+  if(isset($_POST["blogpostmaken"])){
+
+
+    $blognaam = htmlspecialchars($_POST['blognaam']);
+    $blogtekst = htmlspecialchars($_POST['blogtekst']);
+    $hastags = htmlspecialchars($_POST['hastags']);  
+
+    
+    if($blognaam == NULL){
+
+      echo("voer een blognaam in!");
+
+    }
+
+    if($blogtekst == NULL){
+
+      echo("voer uw tekst in!");
+
+    }
+
+    if($hastags == NULL){
+
+      echo("voer hastags in!");
+
+
+    }
+
+    $query = $conn->execute("SELECT id FROM userdata WHERE gebruikersnaam='$username'");
+
+    $useridinfo = $row['id'];
+
+    $query = $conn->prepare("INSERT INTO blogposts(userid, blognaam, tekst, hastags) VALUES (:userid, :blognaam, :blogtekst, :hastags)");
+
+    $query->bindValue(":userid", $useridinfo, PDO::PARAM_INT);
+    $query->bindValue(":blognaam", $blognaam, PDO::PARAM_STR);
+    $query->bindValue(":blogtekst", $blogtekst, PDO::PARAM_STR);
+    $query->bindValue(":hastags", $hastags, PDO::PARAM_STR);
+
+
+    if($query->execute() == TRUE){
+
+      echo("blogpost gemaakt <br>");
 
 
 
+    }
+    else{
+      echo"Error: er ging iets mis, probeer het opnieuw 2 <br>";
+    }
+    
+  }
 
+  
 
 
 ?>
@@ -74,7 +145,7 @@
 
         </div>
 
-        <?php echo "<a href=\"profielPagina.php\"><font color=\"#fffff\" size=\"5\"> $username </font></a>"; ?>
+        <?php echo "<a href=\"profielPagina.php\"><font color=\"#fffff\" size=\"5\"> $gebruikersnaam </font></a>"; ?>
       </nav>
 
       <div class="post-container">
@@ -82,6 +153,22 @@
       </div>
       <div class="check">
       </div>
+      <br>
+      <form method="POST" type="submit">
+        <input type="text" name="blognaam" maxlength="50">Blognaam</input>
+        <br><br>
+        <input type="text" name="blogtekst" maxlength="400">blog tekst</input>
+        <br><br>
+        <input type="text" name="hastags" maxlength="30">hastags</input>
+        <br><br>
+        <input class="form-control" type="file" id="formFile"></input>
+        <br><br>
+        <input type="submit" id="blogpostmaken" name="blogpostmaken"></input>
+      </form>
+      
+
+
+
 </body>
 
 

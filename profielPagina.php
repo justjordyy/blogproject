@@ -2,7 +2,12 @@
 <?php
   session_start();
 
-  $conn = new PDO('mysql:host=localhost;dbname=test', 'hoofdadmin', 'hoofdadmin123');
+  $servername = "localhost";
+  $username = "root";
+  $password = "";
+  $dbname = "testdatabase";
+
+  $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
 
   $username = $_SESSION['loginid'];
   
@@ -111,34 +116,23 @@
   
   if(isset($_POST["updatebutton"]) && $gebruikersnaam != NULL && $gebruikersnaam != NULL && $loginwachtwoord != NULL && $loginwachtwoordhash != NULL){
 
+    $query = $conn->prepare("SELECT gebruikersnaam FROM information WHERE gebruikersnaam='$gebruikersnaam'");
 
-
-
-    if($gebruikersnaam == NULL){
-
-      $username1 = $username2;
-
-
-
-    }
-    else{
-
-      $username1 = $gebruikersnaam;
+    if($query != null){
+      echo("Ongeldige gebruikersnaam, de gebruikersnaam bestaat al");
+      die;
+      header('Location: profielPagina.php');
     }
 
 
-    if($loginmail == NULL){
+    $query = $conn->prepare("SELECT email FROM information WHERE mail='$loginmail'");
 
-      $usermail1 = $usermail2;
-
-      
-
+    if($query != null){
+      echo("Ongeldige email, het email-adres bestaat al");
+      die;
+      header('Location: profielPagina.php');
     }
-    else{
-
-      $usermail1 = $loginmail;
-
-    }
+    
 
     if($loginwachtwoord == NULL || $loginwachtwoord != $loginwachtwoordbevestig){
 
@@ -154,7 +148,7 @@
     }
 
 
-    $query = $conn->prepare("UPDATE userdata SET gebruikersnaam=:gebruikersnaam, email=:email, wachtwoord=:wachtwoord WHERE gebruikersnaam='$username'");
+    $query = $conn->prepare("UPDATE information SET gebruikersnaam=:gebruikersnaam, mail=:email, WW=:wachtwoord WHERE gebruikersnaam='$username'");
 
     $query->bindValue(":gebruikersnaam", $username1, PDO::PARAM_STR);
     $query->bindValue(":email", $usermail1, PDO::PARAM_STR);

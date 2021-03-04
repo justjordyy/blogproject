@@ -240,3 +240,8 @@
     display: none;
     color: red;
   }
+
+.username{
+  text-decoration: none;
+}
+ 

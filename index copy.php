@@ -128,42 +128,7 @@ if(isset($_POST["loginbutton"])){
             </div>
             <span  id="forgotpw"  data-bs-toggle="modal" data-bs-target="#wwvergeten">wachtwoord vergeten?</span>
             <div class="modal-footer">
-              <span  id="ngl"  data-bs-toggle="modal" data-bs-target="#registreermodal">Nog geen account? Registreer</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Registreer -->
-      <div class="modal fade" id="registreermodal" tabindex="-1" aria-labelledby="registreer" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="registreer">Registreren</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-             <form id="mdl"  method="post">
-              <div class="form-group">
-                <input type="text" class="form-control" id="usernamereg"placeholder="gebruikersnaam" required name="gebruikersnaam">
-              </div>
-            <div class="form-group">
-              <input type="email" class="form-control" id="emailreg"placeholder="Email adres" required name="email">
-            </div>
-            <div class="form-group">
-              <input type="password" class="form-control" id="passwordreg" placeholder="wachtwoord" required name="wachtwoord">
-            </div>
-            <div class="form-group">
-              <input type="password" class="form-control" id="passwordreg" placeholder="Voer uw wachtwoord nogmaals in" required name="wachtwoord2">
-            </div>
-            <input type="checkbox" id="regconfirm">
-            <label for="regconfirm">Ik ga akkoord met de voorwaarden</label><br><br>
-              <p id="gebrerr">gebruikersnaam is al in gebruik</p>
-              <p id="mailerr">er is al een account met deze mail</p>
-              <p id="wwerr">wachtwoorden komen niet overeen</p>
-              <p id="dberr">Kon geen verbinding maken met de database</p>
-            <button type="submit" class="btn btn-info btn-block btn-round">Registreer</button>
-          </form>
+              <span  id="ngl"  data-bs-toggle="modal" data-bs-target="registreren.php">Nog geen account? Registreer</span>
             </div>
           </div>
         </div>
