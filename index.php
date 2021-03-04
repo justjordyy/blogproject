@@ -82,10 +82,10 @@ if(isset($_POST["loginbutton"])){
           <a class="navbar-brand" id="brandcolor" href="#">
             <img src="./img/brand.png"width="40" height="40" class="d-inline-block align-top">  
             Placeholder</a>
-            <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-              </form>
+            <form action="search.php?" method="post" class="d-flex">
+              <input class="form-control me-2" type="text" name="search" placeholder="Search..." required="" style="width:30%"></p>
+              <button class="btn btn-outline-success" type="submit" value="Submit">Search</button>
+            </form>
             <span class="navbar-text" id="login"  data-bs-toggle="modal" data-bs-target="#loginmodal">Login</span>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
