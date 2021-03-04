@@ -1,3 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"> </script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./js/websiteloader.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/loginback.css">
+    <title>blog</title>    
+</head>
+<body>
+
+
+<div class="loader">loading....</div> <!-- Website loader -->
+<div class="toppit">
+</div>
+<div class="container">
+<div class="regform">
+<form id="frm" method="post">
+<input type="text" class="reg" id="usernamereg"placeholder="gebruikersnaam" required name="gebruikersnaam">
+<input type="email" class="reg" id="emailreg"placeholder="Email adres" required name="email">
+<input type="password" class="reg" id="passwordreg" placeholder="wachtwoord" required name="wachtwoord">
+<input type="password" class="reg" id="passwordreg" placeholder="Voer uw wachtwoord nogmaals in" required name="wachtwoord2"><br><br>
+<input type="checkbox" required id="regconfirm">
+            <label for="regconfirm">Ik ga akkoord met de voorwaarden</label><br><br>
+              <p id="gebrerr">gebruikersnaam is al in gebruik</p>
+              <p id="mailerr">er is al een account met deze mail</p>
+              <p id="wwerr">wachtwoorden komen niet overeen</p>
+              <p id="dberr">Kon geen verbinding maken met de database</p>
+            <button type="submit" class="btn btn-info btn-block btn-round" >Registreer</button>
+</form>
+</div>
+</div>
+<div class="topdown"></div>
+
+
 <?php 
 $servername = "localhost";
 $username = "root";
@@ -64,45 +102,6 @@ else {
 }
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"> </script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="./js/websiteloader.js"></script>
-    <link rel="stylesheet" type="text/css" href="./css/loginback.css">
-    <title>blog</title>    
-</head>
-<body>
-
-
-<div class="loader">loading....</div> <!-- Website loader -->
-<div class="toppit">
-</div>
-<div class="container">
-<div class="regform">
-<form id="frm" method="post">
-<input type="text" class="reg" id="usernamereg"placeholder="gebruikersnaam" required name="gebruikersnaam">
-<input type="email" class="reg" id="emailreg"placeholder="Email adres" required name="email">
-<input type="password" class="reg" id="passwordreg" placeholder="wachtwoord" required name="wachtwoord">
-<input type="password" class="reg" id="passwordreg" placeholder="Voer uw wachtwoord nogmaals in" required name="wachtwoord2"><br><br>
-<input type="checkbox" required id="regconfirm">
-            <label for="regconfirm">Ik ga akkoord met de voorwaarden</label><br><br>
-              <p id="gebrerr">gebruikersnaam is al in gebruik</p>
-              <p id="mailerr">er is al een account met deze mail</p>
-              <p id="wwerr">wachtwoorden komen niet overeen</p>
-              <p id="dberr">Kon geen verbinding maken met de database</p>
-            <button type="submit" class="btn btn-info btn-block btn-round" >Registreer</button>
-</form>
-</div>
-</div>
-<div class="topdown"></div>
-
-
-
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
