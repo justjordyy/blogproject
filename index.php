@@ -106,8 +106,8 @@ if(isset($_POST["loginbutton"])){
           <a class="navbar-brand" id="brandcolor" href="#">
             <img src="./img/brand.png"width="40" height="40" class="d-inline-block align-top">  
             Placeholder</a>
-            <form action="search.php?" method="post" class="d-flex">
-              <input class="form-control me-2" type="text" name="search" placeholder="Search..." required="" style="width:30%"></p>
+            <form action="search.php" method="post" class="d-flex">
+              <input class="form-control me-2" type="text" name="abc" placeholder="Search..."></p>
               <button class="btn btn-outline-success" type="submit" value="Submit">Search</button>
             </form>
             <span class="navbar-text" id="login"  data-bs-toggle="modal" data-bs-target="#loginmodal">Login</span>
