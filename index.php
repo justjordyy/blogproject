@@ -1,4 +1,5 @@
 <?php
+<<<<<<< Updated upstream
 session_start();
 
 
@@ -81,6 +82,47 @@ if(isset($_POST["loginbutton"])){
 }
 
 
+=======
+
+session_start();
+
+if(isset($_POST['loginbutton'])){
+
+  $db2 = new PDO('msql:host=test;dbname=userdata', '$databaseUsername', '$databasePassword');
+
+  $username2 = htmlspecialchars($_POST['gebruikersnaam2']);
+  $wachtwoord2 = htmlspecialchars($_POST['wachtwoord2']);
+  $wachtwoordhash = hash('sha256', $wachtwoord2);
+  $query2 = $db2->prepare("SELECT * FROM gebruikers where gebruikersnaam2=:gebruikersnaam AND wachtwoord2=:wachtwoord");
+
+  $query->bindValue(":gebruikersnaam", "$username2", PDO::PARAM_STR);
+  $query->bindValue(":wachtwoord", "$wachtwoord2", PDO::PARAM_STR);
+
+  if($query->execute() == TRUE)
+  {
+    $row = $query2->fetch();
+
+    if($row == NULL){
+
+      $_SESSION["loginid"] = $row['id'];
+
+
+      header('Location: logged-in.php');
+      
+    }
+    else{
+      
+      echo"Onjuiste gebruikersnaam en/of wachtwoord.";
+    }
+  }
+  
+}
+else
+{
+  
+  echo"Onjuiste gebruikersnaam en/of wachtwoord.";
+}
+>>>>>>> Stashed changes
 
 
 
@@ -128,6 +170,7 @@ if(isset($_POST["loginbutton"])){
             <div class="modal-body">
              <form method="post" id="mdl">
             <div class="form-group">
+<<<<<<< Updated upstream
               <input type="email" class="form-control" id="email"placeholder="email adres" name="loginmail">
             </div>
             <div class="form-group">
@@ -138,6 +181,15 @@ if(isset($_POST["loginbutton"])){
             </div>
             <div class="errorcode">
               <?php echo($list); ?>
+=======
+              <input type="email" class="form-control" id="email"placeholder="email adres" name="gebruikersnaam2">
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control" id="password" placeholder="wachtwoord" name="wachtwoord2">
+            </div>
+            <button type="button" class="btn btn-info btn-block btn-round" name="loginbutton">Login</button>
+          </form>
+>>>>>>> Stashed changes
             </div>
             <span  id="forgotpw"  data-bs-toggle="modal" data-bs-target="#wwvergeten">wachtwoord vergeten?</span>
             <div class="modal-footer">
@@ -147,6 +199,69 @@ if(isset($_POST["loginbutton"])){
         </div>
       </div>
 
+<<<<<<< Updated upstream
+=======
+      <!-- Registreer -->
+      <div class="modal fade" id="registreermodal" tabindex="-1" aria-labelledby="registreer" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="registreer">Registreren</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+             <form id="mdl"  method="post">
+              <div class="form-group">
+                <input type="text" class="form-control" id="usernamereg"placeholder="gebruikersnaam" name="gebruikersnaam">
+              </div>
+            <div class="form-group">
+              <input type="email" class="form-control" id="emailreg"placeholder="Email adres" name="email">
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control" id="passwordreg" placeholder="wachtwoord" name="wachtwoord">
+            </div>
+            <input type="checkbox" id="regconfirm">
+            <label for="regconfirm">Ik ga akkoord met de voorwaarden</label><br><br>
+            <button type="submit" class="btn btn-info btn-block btn-round">Registreer</button>
+          </form>
+            </div>
+          </div>
+        </div>
+      </div>
+<?php 
+
+$databaseUsername = "root";
+$databasePassword = "root";
+
+$db = new PDO('msql:host=test;dbname=userdata', '$databaseUsername', '$databasePassword');
+
+$username = htmlspecialchars($_POST['gebruikersnaam']);
+$email = htmlspecialchars($_POST['emailadres']);
+$wachtwoord = htmlspecialchars($_POST['wachtwoord']);
+$wachtwoordhash2 = hash('sha256', $wachtwoord);
+$query = $db->prepare("INSERT INTO gebruikers(gebruikersnaam, email, wachtwoord) VALUES (:gebruikersnaam, :email, :wachtwoord)");
+
+$query->bindValue(":gebruikersnaam", "$username", PDO::PARAM_STR);
+$query->bindValue(":email", "$email", PDO::PARAM_STR);
+$query->bindValue(":wachtwoord", "$wachtwoord", PDO::PARAM_STR);
+
+
+if($query->execute() == TRUE)
+{
+       echo "Het is goed gegaan";
+
+}
+else
+{
+    echo "Er gaat iets mis";
+}
+
+
+//login systeem
+
+?>
+
+>>>>>>> Stashed changes
       <!-- wachtwoord vergeten -->
       <div class="modal fade" id="wwvergeten" tabindex="-1" aria-labelledby="wwvergeten" aria-hidden="true">
         <div class="modal-dialog">
