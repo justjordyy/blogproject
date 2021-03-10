@@ -38,7 +38,6 @@ if(isset($_POST["loginbutton"])){
 
       $query->bindValue(":email", $loginmail, PDO::PARAM_STR);
       $query->bindValue(":wachtwoord", $loginwachtwoordhash, PDO::PARAM_STR);
-
       if($query->execute() == TRUE){
 
         
