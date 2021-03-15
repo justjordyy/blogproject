@@ -11,31 +11,40 @@ $dbname = "testdatabase";
 
 $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
 
+//dit stukje laat GEEN error messages meer zien, PAS OP.
+error_reporting(0);
+
+
+if(isset($_SESSION['loginid'])){
+  header('Location: logged-in.php');
+}
+
+
 
 if(isset($_POST["loginbutton"])){
 
   
     if(empty($_POST['loginmail']) || empty($_POST['loginwachtwoord'])){
 
-      echo"vul uw email adress en/of wachtwoord in.";
+      $list="<center> vul uw email adress en/of wachtwoord in. <center>";
     }
     else{
 
-      $loginmail = htmlspecialchars($_POST['loginmail']);
-      $loginwachtwoord = htmlspecialchars($_POST['loginwachtwoord']);
+      $loginmail = $_POST['loginmail'];
+      $loginwachtwoord = $_POST['loginwachtwoord'];
       $loginwachtwoordhash = hash('sha256', $loginwachtwoord);
 
       $query = $conn->prepare("SELECT * FROM information WHERE mail=:email AND WW=:wachtwoord");
 
       $query->bindValue(":email", $loginmail, PDO::PARAM_STR);
       $query->bindValue(":wachtwoord", $loginwachtwoordhash, PDO::PARAM_STR);
-
-
-
-
       if($query->execute() == TRUE){
 
+        
+        
         $row = $query->fetch();
+
+
 
 
         if($row != NULL){
@@ -45,13 +54,21 @@ if(isset($_POST["loginbutton"])){
 
         }
         else{
-          echo('Onjuiste email en/of wachtwoord, probeer het opnieuw.');
+          $list="<center> Onjuiste email en/of wachtwoord, probeer het opnieuw.<center>"; 
+
+          $list .=  "</a><br/>";
+          
+          
         }
+
+
+
+        
 
 
       }
       else{
-        echo"Er ging iets mis, probeer het opnieuw.";
+        echo"Error: er ging iets mis, probeer het opnieuw";
       }
 
     }
@@ -88,8 +105,8 @@ if(isset($_POST["loginbutton"])){
           <a class="navbar-brand" id="brandcolor" href="#">
             <img src="./img/brand.png"width="40" height="40" class="d-inline-block align-top">  
             Placeholder</a>
-            <form action="search.php?" method="post" class="d-flex">
-              <input class="form-control me-2" type="text" name="search" placeholder="Search..." required="" style="width:30%"></p>
+            <form action="search.php" method="post" class="d-flex">
+              <input class="form-control me-2" type="text" name="abc" placeholder="Search..."></p>
               <button class="btn btn-outline-success" type="submit" value="Submit">Search</button>
             </form>
             <span class="navbar-text" id="login"  data-bs-toggle="modal" data-bs-target="#loginmodal">Login</span>
@@ -117,6 +134,9 @@ if(isset($_POST["loginbutton"])){
             </div>
             <input id="button" type="submit" class="btn btn-info btn-block btn-round" name="loginbutton" id="loginbutton" placeholder="login"></input>
               </form>
+            </div>
+            <div class="errorcode">
+              <?php echo($list); ?>
             </div>
             <span  id="forgotpw"  data-bs-toggle="modal" data-bs-target="#wwvergeten">wachtwoord vergeten?</span>
             <div class="modal-footer">
