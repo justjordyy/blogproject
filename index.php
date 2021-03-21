@@ -177,66 +177,7 @@ if(isset($_POST["loginbutton"])){
 <?php
 
 
-//blog laten zien
-
-$query = $conn->prepare("SELECT * FROM blogposts ORDER BY datum DESC");
-
-
-if($query->execute() == TRUE){
-
-  if($query->rowCount()>0){
-
-
-    while($row = $query->fetch()){
-
-      
-      ?>
-        <tr>
-            <td>
-            <div class="row">
-              <div class="leftcolumn">
-                <div class="card">
-                  <h2><?php echo($row["blognaam"]); ?></h2>
-                  <h5>Datum: <?php echo($row["datum"]); ?></h5>
-                  <div class="blogimg">
-                    <?php
-                      if($row['foto'] == NULL){
-                      
-                      }else{
-                        echo '<img src="upload' . $row['foto'] .'" alt="Foto" style="height:200px;" >' . "<br>"; 
-                      }
-                    ?>
-                  </div>
-                  <?php
-                  $tekst = substr($row["blogtekst"], 0, 50);
-                  echo $tekst . "...";
-                  ?>
-                  <?php
-                    echo "<a href='blogpaginaView.php?blogid=" . $row["blogid"] . "'>" . "Lees verder" . "</a><br>";
-                  ?>
-                </div>
-              </div>
-            </div>
-              <div class="container">
-                <div class="col">
-                </div>
-              </div>
-
-             
-            </td>
-            <td></td>
-          </tr>
-<?php        
-    }
-
-
-
-}
-else{
-  echo("geen blogposts beschikbaar");
-}
-
-}
+include "blogFeed.php";
 
 ?>
 

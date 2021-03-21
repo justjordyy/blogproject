@@ -283,10 +283,6 @@
           <a class="navbar-brand" id="brandcolor" href="logged-in.php">
             <img src="./img/logo1.png"width="40" height="40" class="d-inline-block align-top">  
             BlogBay</a>
-            <form class="d-flex" method="post" type="submit">
-                <input class="form-control me-2" name="zoektermen" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" name="zoeken" type="submit">Search</button>
-              </form>
             <span></span>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
