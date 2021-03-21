@@ -38,7 +38,14 @@ if(isset($_POST["loginbutton"])){
 
       $query->bindValue(":email", $loginmail, PDO::PARAM_STR);
       $query->bindValue(":wachtwoord", $loginwachtwoordhash, PDO::PARAM_STR);
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
       if($query->execute() == TRUE){
+
+        
 
         
         
@@ -103,8 +110,8 @@ if(isset($_POST["loginbutton"])){
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
           <a class="navbar-brand" id="brandcolor" href="#">
-            <img src="./img/brand.png"width="40" height="40" class="d-inline-block align-top">  
-            Placeholder</a>
+            <img src="./img/logo1.png"width="40" height="40" class="d-inline-block align-top">  
+            BlogBay</a>
             <form action="search.php" method="post" class="d-flex">
               <input class="form-control me-2" type="text" name="abc" placeholder="Search..."></p>
               <button class="btn btn-outline-success" type="submit" value="Submit">Search</button>
@@ -170,5 +177,72 @@ if(isset($_POST["loginbutton"])){
 </body>
 </html>
 
+
+
+<?php
+
+
+//blog laten zien
+
+$query = $conn->prepare("SELECT * FROM blogposts ORDER BY datum DESC");
+
+
+if($query->execute() == TRUE){
+
+  if($query->rowCount()>0){
+
+
+    while($row = $query->fetch()){
+
+      
+      ?>
+        <tr>
+            <td>
+            <div class="row">
+              <div class="leftcolumn">
+                <div class="card">
+                  <h2><?php echo($row["blognaam"]); ?></h2>
+                  <h5>Datum: <?php echo($row["datum"]); ?></h5>
+                  <div class="blogimg">
+                    <?php
+                      if($row['foto'] == NULL){
+                      
+                      }else{
+                        echo '<img src="upload' . $row['foto'] .'" alt="Foto" style="height:200px;" >' . "<br>"; 
+                      }
+                    ?>
+                  </div>
+                  <?php
+                  $tekst = substr($row["blogtekst"], 0, 50);
+                  echo $tekst . "...";
+                  ?>
+                  <?php
+                    echo "<a href='blogpaginaView.php?blogid=" . $row["blogid"] . "'>" . "Lees verder" . "</a><br>";
+                  ?>
+                </div>
+              </div>
+            </div>
+              <div class="container">
+                <div class="col">
+                </div>
+              </div>
+
+             
+            </td>
+            <td></td>
+          </tr>
+<?php        
+    }
+
+
+
+}
+else{
+  echo("geen blogposts beschikbaar");
+}
+
+}
+
+?>
 
 

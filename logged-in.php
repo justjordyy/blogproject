@@ -1,5 +1,12 @@
 <?php
   session_start();
+
+  $servername = "localhost";
+  $username = "root";
+  $password = "";
+  $dbname = "testdatabase";
+  
+  $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
 ?>
 
 <!DOCTYPE html>
@@ -11,11 +18,43 @@
     <link rel="stylesheet" type="text/css" href="./css/mainpage.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="./js/websiteloader.js"></script>
-    <title>blog</title>
+    <title>BlogBay</title>
 </head>
 <body>
 
+        <div class="modal fade" id="modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Maak een blogpost</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post" enctype="multipart/form-data" Type="submit">
+        <div class="modal-body">
+        <div class="mb-3">
+    <label for="exampleFormControlTextarea1" class="form-label">Titel</label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" maxlength="40" name="blognaam" rows="1"></textarea>
+    <label for="exampleFormControlTextarea1" class="form-label">Beschrijving</label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" maxlength="1000" name="blogtekst" rows="8"></textarea>
+    <label for="exampleFormControlTextarea1" maxlength="20" class="form-label">Hastags</label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" name="hastags" rows="1"></textarea>
+    <div class="input-group">
+      <input type="file" class="form-control" id="imageUpload" name="imageUpload" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+  </div>
+  </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
+          <input type="submit" id="blogpostmaken" name="blogpostmaken" value="Aanmaken" class="btn btn-primary"></input>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
 <?php
+
+
 
 $servername = "localhost";
 $username = "root";
@@ -34,7 +73,9 @@ $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
   }
 
 
-  $query = $conn->prepare("SELECT gebruikersnaam FROM information WHERE id='$loginid'");
+  $query = $conn->prepare("SELECT gebruikersnaam FROM information WHERE id=:loginid");
+
+  $query->bindValue(":loginid", $loginid, PDO::PARAM_INT);
 
 
 
@@ -57,115 +98,287 @@ $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
 
 ?>
 
+<div class="loader">loading....</div> <!-- Website loader -->
+    <!-- Navigatie bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" id="brandcolor" href="#">
+          <img src="./img/logo1.png"width="40" height="40" class="d-inline-block align-top">
+          BlogBay</a>
+          <form method="post" type="submit" class="d-flex">
+            <input class="form-control me-2" type="search" name="zoekTermen" placeholder="zoeken" aria-label="Search">
+            <form method="post" type="submit">
+              <div class="zoeken-button">
+                <input type="submit" id="zoeken" name="zoeken" class="post-btn" value="zoeken" >
+              </div>
+            </form>
+          </form>
+          <span class="navbar-brand"><img src="./img/logo1.png"width="40" height="40" class="prof-pic"></span>
+
+        </div>
+
+        <?php echo "<a style='padding-right:10px' href=\"eigenProfielPagina.php\"><font color=\"#fffff\" size=\"5\"> $gebruikersnaam </font></a>"; ?>
+      </nav>
+
+      <div class="post-container">
+        <button class="post-btn btn-outline-success" type="submit" data-bs-toggle="modal" data-bs-target="#modal" >Blog post maken</button>
+      </div>
+      <div class="check">
+      </div>
+      <br>
+</div>
+<br><br>
 
 <?php
-  //blogsysteem
+  //blog maken
 
   error_reporting(E_ALL);
-
-  $servername = "localhost";
-  $username = "root";
-  $password = "";
-  $dbname = "testdatabase";
-
-
-  $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-  
-  
 
   if(isset($_POST["blogpostmaken"])){
 
 
+
     $blognaam = htmlspecialchars($_POST['blognaam']);
     $blogtekst = htmlspecialchars($_POST['blogtekst']);
-    $hastags = htmlspecialchars($_POST['hastags']);  
+    $hastags = htmlspecialchars($_POST['hastags']);
 
     
     if($blognaam == NULL){
 
-      echo("voer een blognaam in!");
+      
+      //verander naar mooie error code
+      header("Location: logged-in.php");
 
+      echo("voer een blognaam in!");
+      exit;
     }
 
     if($blogtekst == NULL){
 
       echo("voer uw tekst in!");
+      //verander naar mooie error code
+      header("Location: logged-in.php");
 
+      echo("voer uw tekst in!");
+      exit;
     }
 
     if($hastags == NULL){
 
+      
+      //verander naar mooie error code
+      header("Location: logged-in.php");
+
       echo("voer hastags in!");
-
-
+      exit;
     }
 
-    $query = $conn->execute("SELECT id FROM userdata WHERE gebruikersnaam='$username'");
+    $useridinfo = $loginid;
 
-    $useridinfo = $row['id'];
+    //Process the image that is uploaded by the user
 
-    $query = $conn->prepare("INSERT INTO blogposts(userid, blognaam, tekst, hastags) VALUES (:userid, :blognaam, :blogtekst, :hastags)");
+    $target_dir = "upload";
+    $target_file = $target_dir . basename($_FILES["imageUpload"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+
+    if (move_uploaded_file($_FILES["imageUpload"]["tmp_name"], $target_file)) {
+        echo "The file ". basename( $_FILES["imageUpload"]["name"]). " has been uploaded.";
+
+        $image = basename( $_FILES["imageUpload"]["name"],".jpg"); // used to store the filename in a variable
+        
+    }
+
+
+    $image=basename( $_FILES["imageUpload"]["name"],".jpg"); // used to store the filename in a variable
+
+
+    //datum van blogpost
+    $datum = date('Y-m-d G:i:s');
+
+              
+    $query = $conn->prepare("INSERT INTO blogposts(userid, blognaam, blogtekst, foto, hastags, datum) VALUES (:userid, :blognaam, :blogtekst, '$image', :hastags, :datum)");
 
     $query->bindValue(":userid", $useridinfo, PDO::PARAM_INT);
     $query->bindValue(":blognaam", $blognaam, PDO::PARAM_STR);
     $query->bindValue(":blogtekst", $blogtekst, PDO::PARAM_STR);
     $query->bindValue(":hastags", $hastags, PDO::PARAM_STR);
-
-
+    $query->bindValue(":datum", $datum, PDO::PARAM_STR);
+    
     if($query->execute() == TRUE){
 
-      echo("blogpost gemaakt <br>");
-
-
-
+      $query = $conn->prepare("SELECT * FROM blogposts ORDER BY datum DESC");  
     }
-    else{
-      echo"Error: er ging iets mis, probeer het opnieuw 2 <br>";
-    }
-    
+
   }
+  
 
   
 
 
 ?>
 
-    <div class="loader">loading....</div> <!-- Website loader -->
-    <!-- Navigatie bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container-fluid">
-        <a class="navbar-brand" id="brandcolor" href="#">
-          <img src="./img/brand.png"width="40" height="40" class="d-inline-block align-top">
-          Placeholder</a>
-          <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-          </form>
-          <span class="navbar-brand"><img src="./img/brand.png"width="40" height="40" class="prof-pic"></span>
+<?php
+  //blog zoeken
 
-        </div>
 
-        <?php echo "<a href=\"profielPagina.php\"><font color=\"#fffff\" size=\"5\"> $gebruikersnaam </font></a>"; ?>
-      </nav>
+  if(isset($_POST["zoeken"])){
 
-      <div class="post-container">
-        <button class="post-btn btn-outline-success" type="submit" data-bs-toggle="modal" data-bs-target="#modal" >Create Post</button>
-      </div>
-      <div class="check">
-      </div>
-      <br>
-      <form method="POST" type="submit">
-        <input type="text" name="blognaam" maxlength="50">Blognaam</input>
-        <br><br>
-        <input type="text" name="blogtekst" maxlength="400">blog tekst</input>
-        <br><br>
-        <input type="text" name="hastags" maxlength="30">hastags</input>
-        <br><br>
-        <input class="form-control" type="file" id="formFile"></input>
-        <br><br>
-        <input type="submit" id="blogpostmaken" name="blogpostmaken"></input>
-      </form>
-      
+    $zoekTermen = htmlspecialchars($_POST['zoekTermen']);
+
+    $query = $conn->prepare("SELECT * FROM blogposts WHERE hastags=:zoektermen OR blognaam=:zoektermen");
+
+    $query->bindValue(":zoektermen", $zoekTermen, PDO::PARAM_STR);
+
+
+    if($query->execute() == TRUE){
+  
+      if($query->rowCount() != 0){
+  
+        ?>
+          <h4>Zoekresultaat</h4>
+        <?php
+  
+        while($row = $query->fetch()){
+  
+          
+          ?>
+            <tr>
+              <td>
+              <div class="row">
+                <div class="leftcolumn">
+                  <div class="card">
+                    <h2><?php echo($row["blognaam"]); ?></h2>
+                    <h5>Datum: <?php echo($row["datum"]); ?></h5>
+                    <div class="blogimg">
+                      <?php
+                        if($row['foto'] == NULL){
+                        }else{
+                          echo '<img src="upload' . $row['foto'] .'" alt="Foto" style="height:200px;" >' . "<br>"; 
+                        }
+                      ?>
+                    </div>
+                    <?php
+                    $tekst = substr($row["blogtekst"], 0, 100);
+                    echo $tekst . "...";
+                    ?>
+                    <?php
+                      echo "<a href='blogpaginaView.php?blogid=" . $row["blogid"] . "'>" . "Lees verder" . "</a><br>";
+                      echo("Zoektermen: " . $row["hastags"]);
+                    ?>
+                  </div>
+                </div>
+              </div>
+                <div class="container">
+                  <div class="col">
+                  </div>
+                </div>
+  
+               
+              </td>
+              <td></td>
+            </tr>
+            <hr>
+    <?php        
+        }
+  
+  
+  
+    }
+    else{
+      echo("geen blogposts met die hastags" . "<br><br>");
+    }
+  
+  }
+
+  }
+
+ 
+?>
+
+<?php
+  //blog laten zien
+
+
+    $query = $conn->prepare("SELECT * FROM blogposts ORDER BY datum DESC");
+
+
+    if($query->execute() == TRUE){
+
+      if($query->rowCount()>0){
+
+        ?>
+          <h4>Blog Feed</h4>
+        <?php
+
+
+        while($row = $query->fetch()){
+
+          
+          ?>
+            <tr>
+              <td>
+              <div class="row">
+                <div class="leftcolumn">
+                  <div class="card">
+                    <h2><?php echo($row["blognaam"]); ?></h2>
+                    <h5>Datum: <?php echo($row["datum"]); ?></h5>
+                    <div class="blogimg">
+                   <?php 
+
+                    if($row['foto'] == NULL){
+                      
+                    }else{
+                      echo '<img src="upload' . $row['foto'] .'" alt="Foto" style="height:200px;" >' . "<br>"; 
+                    }
+
+                    
+                   
+                   ?>
+                    <?php
+                    $tekst = substr($row["blogtekst"], 0, 100);
+                    echo $tekst . "...";
+                    ?>
+                    <?php
+                      echo "<a href='blogpaginaView.php?blogid=" . $row["blogid"] . "'>" . "Lees verder" . "</a><br><br>";
+                      echo("Zoektermen: " . $row["hastags"]);
+
+                      
+                    ?>
+
+                  </div>
+                </div>
+                
+              </div>
+                <div class="container">
+                  <div class="col">
+                  </div>
+                </div>
+
+              
+              </td>
+              <td></td>
+            </tr>
+    <?php        
+        }
+
+
+
+    }
+    else{
+      echo("geen blogposts beschikbaar");
+    }
+
+  }
+
+?>
+
+
+
+
+
+
+
 
 
 
