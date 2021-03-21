@@ -273,7 +273,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="./js/websiteloader.js"></script>
     <script src="./js/ProfielPagina.js" defer></script>
-    <title>blog</title>
+    <title>BlogBay</title>
 </head>
 <body>
     <div class="loader">loading....</div> <!-- Website loader -->

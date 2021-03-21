@@ -113,7 +113,7 @@ $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
               </div>
             </form>
           </form>
-          <span class="navbar-brand"><img src="./img/logo1.png"width="40" height="40" class="prof-pic"></span>
+          <span></span>
 
         </div>
 
@@ -132,7 +132,7 @@ $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
 <?php
   //blog maken
 
-  error_reporting(E_ALL);
+  error_reporting(0);
 
   if(isset($_POST["blogpostmaken"])){
 
@@ -145,32 +145,32 @@ $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     
     if($blognaam == NULL){
 
-      
-      //verander naar mooie error code
+
       header("Location: logged-in.php");
 
       echo("voer een blognaam in!");
-      exit;
+
+      
+      die;
     }
 
     if($blogtekst == NULL){
 
-      echo("voer uw tekst in!");
-      //verander naar mooie error code
+      
       header("Location: logged-in.php");
-
       echo("voer uw tekst in!");
-      exit;
+      
+
+      die;
     }
 
     if($hastags == NULL){
 
       
-      //verander naar mooie error code
       header("Location: logged-in.php");
 
       echo("voer hastags in!");
-      exit;
+      die;
     }
 
     $useridinfo = $loginid;

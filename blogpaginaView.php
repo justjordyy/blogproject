@@ -36,7 +36,7 @@
     <link rel="stylesheet" type="text/css" href="./css/mainpage.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="./js/websiteloader.js"></script>
-    <title>blog</title>
+    <title>BlogBay</title>
 </head>
 
 
@@ -92,7 +92,7 @@
           <img src="./img/logo1.png"width="40" height="40" class="d-inline-block align-top">
           BlogBay</a>
 
-          <span class="navbar-brand"><img src="./img/logo1.png"width="40" height="40" class="prof-pic"></span>
+          <span></span>
 
         </div>
 
