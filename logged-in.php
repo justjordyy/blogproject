@@ -175,7 +175,7 @@ $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
 
     $useridinfo = $loginid;
 
-    //Process the image that is uploaded by the user
+    //bewerk foto die geupload is
 
     $target_dir = "upload";
     $target_file = $target_dir . basename($_FILES["imageUpload"]["name"]);
@@ -185,18 +185,18 @@ $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     if (move_uploaded_file($_FILES["imageUpload"]["tmp_name"], $target_file)) {
         echo "The file ". basename( $_FILES["imageUpload"]["name"]). " has been uploaded.";
 
-        $image = basename( $_FILES["imageUpload"]["name"],".jpg"); // used to store the filename in a variable
+        $image = basename( $_FILES["imageUpload"]["name"],".jpg"); // sla de bestandsnaam op
         
     }
 
 
-    $image=basename( $_FILES["imageUpload"]["name"],".jpg"); // used to store the filename in a variable
+    $image=basename( $_FILES["imageUpload"]["name"],".jpg"); // sla de bestandsnaam op
 
 
     //datum van blogpost
     $datum = date('Y-m-d G:i:s');
 
-              
+    //maak blogpost          
     $query = $conn->prepare("INSERT INTO blogposts(userid, blognaam, blogtekst, foto, hastags, datum) VALUES (:userid, :blognaam, :blogtekst, '$image', :hastags, :datum)");
 
     $query->bindValue(":userid", $useridinfo, PDO::PARAM_INT);
@@ -212,10 +212,10 @@ $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
 
   }
   
-
+  //blogzoeken functie
   include "blogZoeken.php";
 
-
+  //blog feed functie
   include "blogFeed.php";
 
 

@@ -176,7 +176,7 @@
 
 
                 ?>
-
+                <!--bewerk blogpost-->
                 <div class="modal fade" id="modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog">
                       <div class="modal-content">
@@ -370,12 +370,12 @@
 
 
                 ?>
-
+                <!--bewerk blogpost-->
                 <div class="modal fade" id="modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h5 class="modal-title" id="staticBackdropLabel">Maak een blogpost</h5>
+                          <h5 class="modal-title" id="staticBackdropLabel">Bewerk blogpost</h5>
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form method="post" Type="submit">
