@@ -443,7 +443,7 @@
 
                 $row = $query->fetch();
 
-                header("Refresh:0");
+                
 
               }
               else{
@@ -498,7 +498,9 @@
                $query = $conn->prepare("SELECT * FROM blogposts where blogid=:blogid");
                $query->bindValue(":blogid", $blogid, PDO::PARAM_INT);
 
-               header("Refresh:0");
+               $row = $query->fetch();
+
+               
 
               }
               else{

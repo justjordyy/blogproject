@@ -39,7 +39,7 @@
     <label for="exampleFormControlTextarea1" maxlength="20" class="form-label">Hastags</label>
     <textarea class="form-control" id="exampleFormControlTextarea1" name="hastags" rows="1"></textarea>
     <div class="input-group">
-      <input type="file" class="form-control" id="imageUpload" name="imageUpload" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+      <input type="file" class="form-control" id="imageUpload" name="imageUpload" aria-describedby="inputGroupFileAddon04" aria-label="Upload" accept="image/x-png,image/jpeg/jpg">
   </div>
   </div>
         </div>
@@ -181,6 +181,7 @@ $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $target_file = $target_dir . basename($_FILES["imageUpload"]["name"]);
     $uploadOk = 1;
     $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+
 
     if (move_uploaded_file($_FILES["imageUpload"]["tmp_name"], $target_file)) {
         echo "The file ". basename( $_FILES["imageUpload"]["name"]). " has been uploaded.";
