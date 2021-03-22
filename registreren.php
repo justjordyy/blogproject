@@ -1,69 +1,3 @@
-<?php 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "testdatabase";
-//connection
-try {
-  $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-//Error
-  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-  echo $e->getMessage();
-  echo "<script type='text/javascript'>document.getElementById('dberr').style.display='block';</script>";
-}
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-  //verklaar alle vars
-$username = htmlspecialchars($_POST['gebruikersnaam']);
-$email = htmlspecialchars($_POST['email']);
-$wachtwoord = htmlspecialchars($_POST['wachtwoord']);
-$wachtwoord2 = htmlspecialchars($_POST['wachtwoord2']);
-$wachtwoordhash = password_hash($wachtwoord, PASSWORD_DEFAULT);
-//prepare 
-$query = $conn->prepare("INSERT INTO information(gebruikersnaam, mail, WW) VALUES (:gebruikersnaam, :mail, :WW)");
-//Check dubbele mail
-$sql = "SELECT * FROM information WHERE mail = ?";
-$stmt = $conn->prepare($sql);
-$stmt->execute(array($email));
-$result = $stmt->fetch(PDO::FETCH_ASSOC);
-if($result){
-  echo "<script type='text/javascript'>document.getElementById('mailerr').style.display='block';</script>";
-}
-else{
-  // check dubbele gebruikersnaam
-  $sql = "SELECT * FROM information WHERE gebruikersnaam = ?";
-$stmt = $conn->prepare($sql);
-$stmt->execute(array($username));
-$result = $stmt->fetch(PDO::FETCH_ASSOC);
-if($result){
-  // echo "<script src=./js/errors.js></script>";
-  echo "<script type='text/javascript'>document.getElementById('gebrerr').style.display='block';</script>";
-}
-else{ 
-  //wachtwoordcheck
-  if($wachtwoord !== $wachtwoord2){
-  echo "<script type='text/javascript'>document.getElementById('wwerr').style.display='block';</script>";
-}
-else{
-
-$query->bindValue(":gebruikersnaam", $username, PDO::PARAM_STR);
-$query->bindValue(":mail", $email, PDO::PARAM_STR);
-$query->bindValue(":WW", $wachtwoordhash, PDO::PARAM_STR);
-
-if(!$query->execute() == TRUE)
-{
-  $message = "something went wrong";
-  echo "<script type='text/javascript'>alert('$message');</script>";
-}
-else {
-  header('Location: index.php');
-}
-
-}
-}
-}
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,12 +22,14 @@ else {
 <input type="text" class="reg" id="usernamereg"placeholder="gebruikersnaam" required name="gebruikersnaam">
 <input type="email" class="reg" id="emailreg"placeholder="Email adres" required name="email">
 <input type="password" class="reg" id="passwordreg" placeholder="wachtwoord" required name="wachtwoord">
-<input type="password" class="reg" id="passwordreg" placeholder="Voer uw wachtwoord nogmaals in" required name="wachtwoord2"><br><br>
+<input type="password" class="reg" id="passwordreg" placeholder="Voer uw wachtwoord nogmaals in" required name="wachtwoord2">
+<input type="text" class="reg" id="passwordreg" placeholder="admincode"  name="rol"><br><br>
 <input type="checkbox" required id="regconfirm">
             <label for="regconfirm">Ik ga akkoord met de voorwaarden</label><br><br>
               <p id="gebrerr">gebruikersnaam is al in gebruik</p>
               <p id="mailerr">er is al een account met deze mail</p>
               <p id="wwerr">wachtwoorden komen niet overeen</p>
+              <p id="rolerr">enter a 1 for admin or 0 for creator</p>
               <p id="dberr">Kon geen verbinding maken met de database</p>
             <button type="submit" class="btn btn-info btn-block btn-round" >Registreer</button>
 </form>
@@ -102,9 +38,94 @@ else {
 <div class="topdown"></div>
 
 
+<?php 
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "testdatabase";
+//connection
+try {
+  $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+//Error
+  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+  echo $e->getMessage();
+  echo "<script type='text/javascript'>document.getElementById('dberr').style.display='block';</script>";
+}
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+  //verklaar alle vars
+$username = htmlspecialchars($_POST['gebruikersnaam']);
+$email = htmlspecialchars($_POST['email']);
+$wachtwoord = htmlspecialchars($_POST['wachtwoord']);
+$wachtwoord2 = htmlspecialchars($_POST['wachtwoord2']);
+$wachtwoordhash = hash('sha256', $wachtwoord);
+$rol = htmlspecialchars($_POST['rol']);
+$admincode = admin;
+//prepare 
+$query = $conn->prepare("INSERT INTO information(gebruikersnaam, mail, WW, rol) VALUES (:gebruikersnaam, :mail, :WW, :rol)");
+//Check dubbele mail
+$sql = "SELECT * FROM information WHERE mail = ?";
+$stmt = $conn->prepare($sql);
+$stmt->execute(array($email));
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+if($result){
+  echo "<script type='text/javascript'>document.getElementById('mailerr').style.display='block';</script>";
+}
+else{
+  // check dubbele gebruikersnaam
+  $sql = "SELECT * FROM information WHERE gebruikersnaam = ?";
+$stmt = $conn->prepare($sql);
+$stmt->execute(array($username));
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+if($result){
+  // echo "<script src=./js/errors.js></script>";
+  echo "<script type='text/javascript'>document.getElementById('gebrerr').style.display='block';</script>";
+}
+else{ 
+  //wachtwoordcheck
+  if($wachtwoord !== $wachtwoord2){
+  echo "<script type='text/javascript'>document.getElementById('wwerr').style.display='block';</script>";
+}
+else{
+if($rol !== $admincode){
+  $query->bindValue(":gebruikersnaam", $username, PDO::PARAM_STR);
+$query->bindValue(":mail", $email, PDO::PARAM_STR);
+$query->bindValue(":WW", $wachtwoordhash, PDO::PARAM_STR);
+  $query->bindValue(":rol", 0, PDO::PARAM_STR);
+  if(!$query->execute() == TRUE)
+{
+  $message = "something went wrong";
+  echo "<script type='text/javascript'>alert('$message');</script>";
+}
+else {
+  header('Location: index.php');
+}
+}
+else{
+  if($rol == $admincode)
+  $query->bindValue(":gebruikersnaam", $username, PDO::PARAM_STR);
+  $query->bindValue(":mail", $email, PDO::PARAM_STR);
+  $query->bindValue(":WW", $wachtwoordhash, PDO::PARAM_STR);
+    $query->bindValue(":rol", 1, PDO::PARAM_STR);
+    if(!$query->execute() == TRUE)
+  {
+    $message = "something went wrong";
+    echo "<script type='text/javascript'>alert('$message');</script>";
+  }
+  else {
+    header('Location: index.php');
+  }
+  }
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+}
+}
+}
+}
+
+?>
+
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
 <script>
 VANTA.NET({
@@ -116,7 +137,7 @@ VANTA.NET({
   minWidth: 200.00,
   scale: 1.00,
   scaleMobile: 1.00,
-})
+}) -->
 </script>
 </body>
 </html>

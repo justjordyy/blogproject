@@ -77,6 +77,10 @@
   display: none;
 }
 
+#rolerr{
+  display: none;
+}
+
 #compl{
   display: none;
   font-size: 2rem;

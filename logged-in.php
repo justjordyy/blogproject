@@ -1,5 +1,12 @@
 <?php
   session_start();
+
+  $servername = "localhost";
+  $username = "root";
+  $password = "";
+  $dbname = "testdatabase";
+  
+  $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
 ?>
 
 <!DOCTYPE html>
@@ -11,26 +18,64 @@
     <link rel="stylesheet" type="text/css" href="./css/mainpage.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="./js/websiteloader.js"></script>
-    <title>blog</title>
+    <title>BlogBay</title>
 </head>
 <body>
 
+        <div class="modal fade" id="modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Maak een blogpost</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post" enctype="multipart/form-data" Type="submit">
+        <div class="modal-body">
+        <div class="mb-3">
+    <label for="exampleFormControlTextarea1" class="form-label">Titel</label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" maxlength="40" name="blognaam" rows="1"></textarea>
+    <label for="exampleFormControlTextarea1" class="form-label">Beschrijving</label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" maxlength="1000" name="blogtekst" rows="8"></textarea>
+    <label for="exampleFormControlTextarea1" maxlength="20" class="form-label">Hastags</label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" name="hastags" rows="1"></textarea>
+    <div class="input-group">
+      <input type="file" class="form-control" id="imageUpload" name="imageUpload" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+  </div>
+  </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
+          <input type="submit" id="blogpostmaken" name="blogpostmaken" value="Aanmaken" class="btn btn-primary"></input>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
 <?php
 
-  $conn = new PDO('mysql:host=localhost;dbname=test', 'hoofdadmin', 'hoofdadmin123');
-
-  $username = $_SESSION['loginid'];
 
 
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "testdatabase";
+  
+
+$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+
+
+ $loginid = $_SESSION['loginid'];
 
 
   if(!isset($_SESSION['loginid'])){
-    //LET OP hij redirect nog naar de copy pagina.
-    header('Location: index copy.php');
+    header('Location: index.php');
   }
 
 
-  $query = $conn->prepare("SELECT * FROM userdata WHERE gebruikersnaam='$username'");
+  $query = $conn->prepare("SELECT gebruikersnaam FROM information WHERE id=:loginid");
+
+  $query->bindValue(":loginid", $loginid, PDO::PARAM_INT);
 
 
 
@@ -41,7 +86,7 @@
 
         if($row != NULL){
 
-          $username = $row['gebruikersnaam'];
+          $gebruikersnaam = $row['gebruikersnaam'];
 
 
         }
@@ -51,37 +96,144 @@
       }
 
 
-
-
-
-
-
-
 ?>
 
-    <div class="loader">loading....</div> <!-- Website loader -->
+<div class="loader">loading....</div> <!-- Website loader -->
     <!-- Navigatie bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" id="brandcolor" href="#">
-          <img src="./img/brand.png"width="40" height="40" class="d-inline-block align-top">
-          Placeholder</a>
-          <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
+          <img src="./img/logo1.png"width="40" height="40" class="d-inline-block align-top">
+          BlogBay</a>
+          <form method="post" type="submit" class="d-flex">
+            <input class="form-control me-2" type="search" name="zoekTermen" placeholder="zoeken" aria-label="Search">
+            <form method="post" type="submit">
+              <div class="zoeken-button">
+                <input type="submit" id="zoeken" name="zoeken" class="post-btn" value="zoeken" >
+              </div>
+            </form>
           </form>
-          <span class="navbar-brand"><img src="./img/brand.png"width="40" height="40" class="prof-pic"></span>
+          <span></span>
 
         </div>
 
-        <?php echo "<a href=\"profielPagina.php\"><font color=\"#fffff\" size=\"5\"> $username </font></a>"; ?>
+        <?php echo "<a style='padding-right:10px' href=\"eigenProfielPagina.php\"><font color=\"#fffff\" size=\"5\"> $gebruikersnaam </font></a>"; ?>
       </nav>
 
       <div class="post-container">
-        <button class="post-btn btn-outline-success" type="submit" data-bs-toggle="modal" data-bs-target="#modal" >Create Post</button>
+        <button class="post-btn btn-outline-success" type="submit" data-bs-toggle="modal" data-bs-target="#modal" >Blog post maken</button>
       </div>
       <div class="check">
       </div>
+      <br>
+</div>
+<br><br>
+
+<?php
+  //blog maken
+
+  error_reporting(0);
+
+  if(isset($_POST["blogpostmaken"])){
+
+
+
+    $blognaam = htmlspecialchars($_POST['blognaam']);
+    $blogtekst = htmlspecialchars($_POST['blogtekst']);
+    $hastags = htmlspecialchars($_POST['hastags']);
+
+    
+    if($blognaam == NULL){
+
+
+      header("Location: logged-in.php");
+
+      echo("voer een blognaam in!");
+
+      
+      die;
+    }
+
+    if($blogtekst == NULL){
+
+      
+      header("Location: logged-in.php");
+      echo("voer uw tekst in!");
+      
+
+      die;
+    }
+
+    if($hastags == NULL){
+
+      
+      header("Location: logged-in.php");
+
+      echo("voer hastags in!");
+      die;
+    }
+
+    $useridinfo = $loginid;
+
+    //Process the image that is uploaded by the user
+
+    $target_dir = "upload";
+    $target_file = $target_dir . basename($_FILES["imageUpload"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+
+    if (move_uploaded_file($_FILES["imageUpload"]["tmp_name"], $target_file)) {
+        echo "The file ". basename( $_FILES["imageUpload"]["name"]). " has been uploaded.";
+
+        $image = basename( $_FILES["imageUpload"]["name"],".jpg"); // used to store the filename in a variable
+        
+    }
+
+
+    $image=basename( $_FILES["imageUpload"]["name"],".jpg"); // used to store the filename in a variable
+
+
+    //datum van blogpost
+    $datum = date('Y-m-d G:i:s');
+
+              
+    $query = $conn->prepare("INSERT INTO blogposts(userid, blognaam, blogtekst, foto, hastags, datum) VALUES (:userid, :blognaam, :blogtekst, '$image', :hastags, :datum)");
+
+    $query->bindValue(":userid", $useridinfo, PDO::PARAM_INT);
+    $query->bindValue(":blognaam", $blognaam, PDO::PARAM_STR);
+    $query->bindValue(":blogtekst", $blogtekst, PDO::PARAM_STR);
+    $query->bindValue(":hastags", $hastags, PDO::PARAM_STR);
+    $query->bindValue(":datum", $datum, PDO::PARAM_STR);
+    
+    if($query->execute() == TRUE){
+
+      $query = $conn->prepare("SELECT * FROM blogposts ORDER BY datum DESC");  
+    }
+
+  }
+  
+
+  include "blogZoeken.php";
+
+
+  include "blogFeed.php";
+
+
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </body>
 
 
