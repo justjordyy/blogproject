@@ -129,12 +129,11 @@ if(isset($_POST["loginbutton"])){
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-             <form id="mdl">
+             <form id="mdl" method="POST" action="send_link.php">
             <div class="form-group">
-              Voer u email in en we sturen u een mail met een code om u wachtwoord te resetten.<br><br>
-              <input type="email" class="form-control" id="email"placeholder="email">
+              Klik alstublieft op de 'stuur herstel code' knop om uw wachtwoord te herstellen.<br><br>
             </div>  Waneeer u niets in u mail ziet, bekijk ook de spam folder.<br> <br>
-            <button type="button" class="btn btn-info btn-block btn-round">Stuur herstel code</button><br><br>
+            <button type="submit" class="btn btn-info btn-block btn-round" name="reset-request-submit">Stuur herstel code</button><br><br>
             </div>
           </div>
         </div>
