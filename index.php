@@ -107,17 +107,77 @@ if(isset($_POST["loginbutton"])){
           <a class="navbar-brand" id="brandcolor" href="#">
             <img src="./img/logo1.png"width="40" height="40" class="d-inline-block align-top">  
             BlogBay</a>
-            <form action="search.php" method="post" class="d-flex">
-              <input class="form-control me-2" type="text" name="abc" placeholder="Search..."></p>
+            <form action="index.php" method="post" class="d-flex">
+              <input class="form-control me-2" type="text" name="abc" placeholder="Search...">
               <button class="btn btn-outline-success" type="submit" value="Submit">Search</button>
             </form>
-            <span class="navbar-text" id="login"  data-bs-toggle="modal" data-bs-target="#loginmodal">Login</span>
+          <span class="navbar-text" id="login"  data-bs-toggle="modal" data-bs-target="#loginmodal">Login</span>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
           </div>
       </nav>
 
+      <style>
+      .searchresult {
+        margin: auto;
+        margin-top: 1.5rem;
+        border: 3px solid lightgrey;
+        max-width: 100%;
+        width: 40rem;
+        height: 8rem;
+        padding: 2rem;
+        font-size: 1.5rem;
+        font-weight: bold;
+        border-radius: 10px;
+        background-color: white;
+      }
+
+      .flex {
+        display: flex;
+      }
+      </style>
+
+
+      <?php
+          $host = "localhost";
+          $user = "root";
+          $password = "";
+          $database_name = "testdatabase";
+          $pdo = new PDO("mysql:host=$host;dbname=$database_name", $user, $password, array(
+          PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+          ));
+
+
+      if(isset($_POST['abc'])){
+        $search = $_POST['abc'];
+        $query = $pdo->prepare("select * from information where gebruikersnaam LIKE '%$search%'  LIMIT 0 , 50");
+        $query->bindValue(1, "%$search%", PDO::PARAM_STR);
+        $query->execute();
+
+        if($_POST['abc'] != ''){
+          if (!$query->rowCount() == 0) {
+            echo "<table class=''>";
+            while ($results = $query->fetch()) {
+              echo "<div class='flex'>";
+              echo "<div class='searchresult'>";
+                echo $results['gebruikersnaam'];
+                echo "</div>";
+                echo "</div>";
+              }
+              echo "</table>";
+            }
+
+            else {
+              echo 'Geen resultaten gevonden';
+            }
+          }
+          else{
+            echo 'Geen resultaten gevonden';
+          }
+        }
+      ?>  
+  
       <!-- Login venster -->
       <div class="modal fade" id="loginmodal" tabindex="-1" aria-labelledby="Login" aria-hidden="true">
         <div class="modal-dialog">
